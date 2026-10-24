@@ -151,7 +151,35 @@ async function run() {
   });
   console.log('Delete:', delRes.status, delRes.data.message);
 
-  console.log('\n--- Step 10: Frontend Serving Check ---');
+  console.log('\n--- Step 10: Missing Record & Parameter Validation ---');
+  const missingRes = await request({
+    hostname: 'localhost',
+    port: 5000,
+    path: '/api/enquiries/99999',
+    method: 'GET',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  console.log('Missing Record Check (404 expected):', missingRes.status);
+
+  const invalidIdRes = await request({
+    hostname: 'localhost',
+    port: 5000,
+    path: '/api/enquiries/invalid-id',
+    method: 'GET',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  console.log('Invalid ID Check (400 expected):', invalidIdRes.status);
+
+  console.log('\n--- Step 11: Admin Logout ---');
+  const logoutRes = await request({
+    hostname: 'localhost',
+    port: 5000,
+    path: '/api/auth/logout',
+    method: 'POST',
+  });
+  console.log('Logout Status (200 expected):', logoutRes.status, logoutRes.data.message);
+
+  console.log('\n--- Step 12: Frontend Serving Check ---');
   const viteRes = await request({
     hostname: 'localhost',
     port: 5173,

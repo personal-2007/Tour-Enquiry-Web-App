@@ -191,4 +191,54 @@ describe('Tour Enquiry REST API Test Suite', () => {
       .set('Authorization', `Bearer ${adminToken}`);
     expect(fetchRes.status).toBe(404);
   });
+
+  // 13. Missing Record Query
+  test('GET /api/enquiries/99999 should return 404 for non-existent record', async () => {
+    const res = await request(app)
+      .get('/api/enquiries/99999')
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
+
+  // 14. Invalid ID Parameter
+  test('GET /api/enquiries/abc should return 400 for malformed non-numeric ID', async () => {
+    const res = await request(app)
+      .get('/api/enquiries/abc')
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
+  });
+
+  // 15. Missing Record Update
+  test('PATCH /api/enquiries/99999/status should return 404 when updating non-existent record', async () => {
+    const res = await request(app)
+      .patch('/api/enquiries/99999/status')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ status: 'Confirmed' });
+
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
+
+  // 16. Missing Record Delete
+  test('DELETE /api/enquiries/99999 should return 404 when deleting non-existent record', async () => {
+    const res = await request(app)
+      .delete('/api/enquiries/99999')
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
+
+  // 17. Admin Logout
+  test('POST /api/auth/logout should clear session cookies and return success', async () => {
+    const res = await request(app).post('/api/auth/logout');
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.message).toMatch(/logged out/i);
+  });
 });

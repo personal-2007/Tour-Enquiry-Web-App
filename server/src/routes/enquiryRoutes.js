@@ -5,6 +5,7 @@ const { authenticateAdmin } = require('../middleware/authMiddleware');
 const {
   validateEnquiry,
   validateStatusUpdate,
+  validateIdParam,
 } = require('../middleware/validateMiddleware');
 const { enquiryLimiter } = require('../middleware/rateLimiter');
 
@@ -18,20 +19,21 @@ router.get('/stats', authenticateAdmin, enquiryController.getEnquiryStats);
 router.get('/', authenticateAdmin, enquiryController.getEnquiries);
 
 // GET /api/enquiries/:id - Retrieve single enquiry details (Protected)
-router.get('/:id', authenticateAdmin, enquiryController.getEnquiryById);
+router.get('/:id', authenticateAdmin, validateIdParam, enquiryController.getEnquiryById);
 
 // PUT /api/enquiries/:id - Update complete enquiry details (Protected)
-router.put('/:id', authenticateAdmin, validateEnquiry, enquiryController.updateEnquiry);
+router.put('/:id', authenticateAdmin, validateIdParam, validateEnquiry, enquiryController.updateEnquiry);
 
 // PATCH /api/enquiries/:id/status - Update enquiry status (Protected)
 router.patch(
   '/:id/status',
   authenticateAdmin,
+  validateIdParam,
   validateStatusUpdate,
   enquiryController.updateEnquiryStatus
 );
 
 // DELETE /api/enquiries/:id - Delete an enquiry (Protected)
-router.delete('/:id', authenticateAdmin, enquiryController.deleteEnquiry);
+router.delete('/:id', authenticateAdmin, validateIdParam, enquiryController.deleteEnquiry);
 
 module.exports = router;

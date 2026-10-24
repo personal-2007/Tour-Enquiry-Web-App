@@ -154,9 +154,25 @@ const validateLogin = (req, res, next) => {
   next();
 };
 
+/**
+ * Validates route parameter :id is a positive integer
+ */
+const validateIdParam = (req, res, next) => {
+  const { id } = req.params;
+  const numId = parseInt(id, 10);
+  if (!id || isNaN(numId) || numId <= 0 || !/^\d+$/.test(id)) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid enquiry ID. ID must be a positive integer.',
+    });
+  }
+  next();
+};
+
 module.exports = {
   validateEnquiry,
   validateStatusUpdate,
   validateLogin,
+  validateIdParam,
   ALLOWED_STATUSES,
 };
