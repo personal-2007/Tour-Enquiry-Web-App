@@ -3,7 +3,7 @@
  */
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_REGEX = /^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]{5,18}$/;
+const PHONE_REGEX = /^[+]?[\d\s().-]{7,25}$/;
 const ALLOWED_STATUSES = ['Pending', 'Contacted', 'Confirmed', 'Cancelled'];
 
 /**
@@ -39,9 +39,10 @@ const validateEnquiry = (req, res, next) => {
 
   // Phone
   const cleanPhone = sanitizeString(phone);
+  const digitsOnly = cleanPhone.replace(/\D/g, '');
   if (!cleanPhone) {
     errors.phone = 'Phone number is required.';
-  } else if (!PHONE_REGEX.test(cleanPhone)) {
+  } else if (!PHONE_REGEX.test(cleanPhone) || digitsOnly.length < 7 || digitsOnly.length > 18) {
     errors.phone = 'Please provide a valid contact phone number.';
   }
 

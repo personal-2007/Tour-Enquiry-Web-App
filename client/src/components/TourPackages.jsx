@@ -93,7 +93,7 @@ const packagesData = [
     destination: 'Serengeti & Zanzibar, Tanzania',
     duration: '12 Days / 11 Nights',
     price: '$5,600',
-    budgetCategory: '$5,000+',
+    budgetCategory: 'Luxury ($5,000+)',
     badge: 'Luxury Safari',
     badgeColor: 'bg-purple-700 text-white',
     description: 'Unrivaled wildlife encounters in the Serengeti followed by turquoise waters and spice farms of Zanzibar.',

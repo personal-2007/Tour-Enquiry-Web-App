@@ -267,7 +267,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"full_name\": \"Alexander Wright (VIP)\",\n  \"email\": \"alex.wright@example.com\",\n  \"phone\": \"+1 555-019-3829\",\n  \"destination\": \"Swiss Alps Alpine Adventure\",\n  \"travel_date\": \"2026-11-20\",\n  \"travellers\": 4,\n  \"budget\": \"$5,000+\",\n  \"message\": \"Upgraded to 4 travellers with mountain guide requested.\",\n  \"status\": \"Confirmed\"\n}"
+              "raw": "{\n  \"full_name\": \"Alexander Wright (VIP)\",\n  \"email\": \"alex.wright@example.com\",\n  \"phone\": \"+1 555-019-3829\",\n  \"destination\": \"Swiss Alps Alpine Adventure\",\n  \"travel_date\": \"2026-11-20\",\n  \"travellers\": 4,\n  \"budget\": \"Luxury ($5,000+)\",\n  \"message\": \"Upgraded to 4 travellers with mountain guide requested.\",\n  \"status\": \"Confirmed\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/enquiries/{{enquiryId}}",
@@ -275,6 +275,42 @@
               "path": ["enquiries", "{{enquiryId}}"]
             },
             "description": "Edit full details of an enquiry record."
+          }
+        },
+        {
+          "name": "Get Missing Enquiry (404 Error Example)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/enquiries/99999",
+              "host": ["{{baseUrl}}"],
+              "path": ["enquiries", "99999"]
+            },
+            "description": "Demonstrates 404 response when querying a non-existent enquiry ID."
+          }
+        },
+        {
+          "name": "Get Enquiry with Invalid ID Format (400 Error Example)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/enquiries/invalid-id",
+              "host": ["{{baseUrl}}"],
+              "path": ["enquiries", "invalid-id"]
+            },
+            "description": "Demonstrates 400 validation response when parameter :id is non-numeric."
           }
         },
         {

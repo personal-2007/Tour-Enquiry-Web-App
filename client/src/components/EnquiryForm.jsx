@@ -57,7 +57,7 @@ const EnquiryForm = ({ preselectedDestination = '', preselectedBudget = '' }) =>
   const validateField = (name, value) => {
     let errorMsg = '';
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]{5,18}$/;
+    const phoneRegex = /^[+]?[\d\s().-]{7,25}$/;
 
     switch (name) {
       case 'full_name':
@@ -69,8 +69,12 @@ const EnquiryForm = ({ preselectedDestination = '', preselectedBudget = '' }) =>
         else if (!emailRegex.test(value.trim())) errorMsg = 'Please enter a valid email address.';
         break;
       case 'phone':
-        if (!value.trim()) errorMsg = 'Phone number is required.';
-        else if (!phoneRegex.test(value.trim())) errorMsg = 'Please enter a valid phone number with area code.';
+        const cleanPhone = value.trim();
+        const digitsOnly = cleanPhone.replace(/\D/g, '');
+        if (!cleanPhone) errorMsg = 'Phone number is required.';
+        else if (!phoneRegex.test(cleanPhone) || digitsOnly.length < 7 || digitsOnly.length > 18) {
+          errorMsg = 'Please enter a valid phone number with area code.';
+        }
         break;
       case 'destination':
         if (!value.trim()) errorMsg = 'Please specify your target destination.';
