@@ -1,0 +1,27 @@
+{
+  "name": "growfinix-tour-enquiry-web-app",
+  "version": "1.0.0",
+  "description": "Full Stack Tour Enquiry Web Application built for Growfinix Technology Internship",
+  "scripts": {
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "start:server": "npm --prefix server start",
+    "build:client": "npm --prefix client run build",
+    "test": "npm --prefix server test",
+    "test:e2e": "node test-e2e.js",
+    "db:init": "npm --prefix server run db:init",
+    "db:seed": "npm --prefix server run db:seed"
+  },
+  "keywords": [
+    "react",
+    "vite",
+    "nodejs",
+    "express",
+    "postgresql",
+    "tailwind",
+    "tour-enquiry",
+    "growfinix"
+  ],
+  "author": "Growfinix Full Stack Developer Intern",
+  "license": "ISC"
+}

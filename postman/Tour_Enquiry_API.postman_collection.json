@@ -1,0 +1,301 @@
+{
+  "info": {
+    "name": "Tour Enquiry Web App API",
+    "_postman_id": "a9108b29-43c2-48f8-b397-158a52e90c74",
+    "description": "Comprehensive Postman API collection for Tour Enquiry Web App by Growfinix Technology.\nIncludes public enquiry submission and protected admin operations.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "enquiryId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        },
+        "description": "Check if API service and database connectivity are operational."
+      }
+    },
+    {
+      "name": "Public Enquiry",
+      "item": [
+        {
+          "name": "Submit New Enquiry (Valid)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Alexander Wright\",\n  \"email\": \"alex.wright@example.com\",\n  \"phone\": \"+1 555-019-3829\",\n  \"destination\": \"Swiss Alps Alpine Adventure\",\n  \"travel_date\": \"2026-11-15\",\n  \"travellers\": 2,\n  \"budget\": \"$2,500 - $5,000\",\n  \"message\": \"Interested in high-altitude hiking passes and scenic train excursions.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enquiries",
+              "host": ["{{baseUrl}}"],
+              "path": ["enquiries"]
+            },
+            "description": "Public endpoint to submit a tour enquiry. Rate limited to 20 requests per hour."
+          }
+        },
+        {
+          "name": "Submit Enquiry (Validation Error Example)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"\",\n  \"email\": \"invalid-email-address\",\n  \"phone\": \"\",\n  \"destination\": \"\",\n  \"travel_date\": \"2020-01-01\",\n  \"travellers\": 0,\n  \"budget\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enquiries",
+              "host": ["{{baseUrl}}"],
+              "path": ["enquiries"]
+            },
+            "description": "Shows detailed validation errors for invalid input."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Authentication",
+      "item": [
+        {
+          "name": "Admin Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.data && res.data.token) {",
+                  "    pm.collectionVariables.set('authToken', res.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@wanderflow.com\",\n  \"password\": \"Admin@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Authenticate admin credentials and obtain JWT in cookie + response body."
+          }
+        },
+        {
+          "name": "Verify Admin Session (Me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Verify current logged-in admin identity."
+          }
+        },
+        {
+          "name": "Admin Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "logout"]
+            },
+            "description": "Terminate session and clear HTTP-only authentication cookie."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Enquiry Management",
+      "item": [
+        {
+          "name": "Get Dashboard Enquiry Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/enquiries/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["enquiries", "stats"]
+            },
+            "description": "Retrieve summary KPI counts (total, pending, contacted, confirmed, cancelled)."
+          }
+        },
+        {
+          "name": "List Enquiries (Paginated & Filtered)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/enquiries?page=1&limit=10&status=Pending&search=",
+              "host": ["{{baseUrl}}"],
+              "path": ["enquiries"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "status", "value": "Pending" },
+                { "key": "search", "value": "" }
+              ]
+            },
+            "description": "Fetch enquiries with optional query parameters: page, limit, status, search, sortBy, sortOrder."
+          }
+        },
+        {
+          "name": "Get Single Enquiry By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/enquiries/{{enquiryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["enquiries", "{{enquiryId}}"]
+            },
+            "description": "Get complete information for a specific enquiry."
+          }
+        },
+        {
+          "name": "Update Enquiry Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Confirmed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enquiries/{{enquiryId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["enquiries", "{{enquiryId}}", "status"]
+            },
+            "description": "Update enquiry lifecycle state ('Pending', 'Contacted', 'Confirmed', 'Cancelled')."
+          }
+        },
+        {
+          "name": "Edit Enquiry Details",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Alexander Wright (VIP)\",\n  \"email\": \"alex.wright@example.com\",\n  \"phone\": \"+1 555-019-3829\",\n  \"destination\": \"Swiss Alps Alpine Adventure\",\n  \"travel_date\": \"2026-11-20\",\n  \"travellers\": 4,\n  \"budget\": \"$5,000+\",\n  \"message\": \"Upgraded to 4 travellers with mountain guide requested.\",\n  \"status\": \"Confirmed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/enquiries/{{enquiryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["enquiries", "{{enquiryId}}"]
+            },
+            "description": "Edit full details of an enquiry record."
+          }
+        },
+        {
+          "name": "Delete Enquiry",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/enquiries/{{enquiryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["enquiries", "{{enquiryId}}"]
+            },
+            "description": "Permanently delete an enquiry record."
+          }
+        }
+      ]
+    }
+  ]
+}
