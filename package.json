@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Full Stack Tour Enquiry Web Application built for Growfinix Technology Internship",
   "scripts": {
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"blue,cyan\" \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "npm --prefix server run dev",
     "dev:client": "npm --prefix client run dev",
     "start:server": "npm --prefix server start",
@@ -23,5 +24,8 @@
     "growfinix"
   ],
   "author": "Growfinix Full Stack Developer Intern",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
 }
